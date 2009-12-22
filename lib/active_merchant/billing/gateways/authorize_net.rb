@@ -220,13 +220,16 @@ module ActiveMerchant #:nodoc:
       #
       # ==== Parameters
       #
-      # * <tt>options</tt> -- A hash of parameters.
-      #
+      # * <tt>options</tt> -- A hash of parameters, or, for backwards compatibility, a string containing only a <tt>subscription_id</tt>
+      # 
       # ==== Options
       #
       # * <tt>:subscription_id</tt> -- A string containing the <tt>:subscription_id</tt> of the recurring payment already in place
       #   for a given credit card. (REQUIRED)
       def cancel_recurring(options = {})
+        if(options.class == String)
+          options = {:subscription_id => options}
+        end
         requires!(options, :subscription_id)
         request = build_recurring_request(:cancel, options)
         recurring_commit(:cancel, request)
